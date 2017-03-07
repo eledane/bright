@@ -1,0 +1,6 @@
+#ignore some files
+wp-content/themes/bright/*.html
+wp-content/themes/bright/*.swap
+.htaccess
+wp-config.php
+
