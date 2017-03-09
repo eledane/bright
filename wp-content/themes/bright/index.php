@@ -28,7 +28,7 @@
 		        <p class="h-subtitle">
 		          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin rhoncus <br> tempor tortor ut posuere.
 		        </p>	
-		        <a class="btn btn-primary" href="#">learn more</a>
+		        <a class="btn btn-primary" href="#"><?php pll_e('learn more'); ?></a>
 		        <a class="btn btn-transparent" href="#">buy now</a>
 		      </div>			
 		    </div>
