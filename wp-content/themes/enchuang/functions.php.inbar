@@ -1,0 +1,1436 @@
+<?php
+/**
+ * Inbar functions and definitions
+ *
+ * Set up the theme and provides some helper functions, which are used in the
+ * theme as custom template tags. Others are attached to action and filter
+ * hooks in WordPress to change core functionality.
+ *
+ * When using a child theme you can override certain functions (those wrapped
+ * in a function_exists() call) by defining them first in your child theme's
+ * functions.php file. The child theme's functions.php file is included before
+ * the parent theme's file, so the child theme functions would be used.
+ *
+ * @link https://codex.wordpress.org/Theme_Development
+ * @link https://codex.wordpress.org/Child_Themes
+ *
+ * Functions that are not pluggable (not wrapped in function_exists()) are
+ * instead attached to a filter or action hook.
+ *
+ * For more information on hooks, actions, and filters,
+ * {@link https://codex.wordpress.org/Plugin_API}
+ *
+ * @package WordPress
+ * @subpackage Inbar
+ * @since Inbar 1.0
+ */
+
+define("LCAL_JSON", "TRUE"); 
+
+/**
+ * Load Framework to support configuration of inbar.
+ *
+ * @since Inbar 1.0
+ */
+if ( !class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/framework/framework.php' ) ) {
+    require_once( dirname( __FILE__ ) . '/framework/framework.php' );
+ }
+
+if ( !isset( $redux_demo ) && file_exists( dirname( __FILE__ ) . '/inc/inbar-config.php' ) ) {
+    require_once( dirname( __FILE__ ) . '/inc/inbar-config.php' );
+}
+
+/**
+ * Enqueues scripts and styles.
+ *
+ * @since Inbar 1.0
+ */
+function inbar_scripts() {
+    
+       // Theme stylesheet.
+	wp_enqueue_style( 'inbar-style', get_stylesheet_uri() );
+
+	// Load other stylesheet.
+	wp_enqueue_style( 'font-awesome', get_template_directory_uri() . '/css/font-awesome.min.css', array(), '' );
+ 
+	if( is_home() || is_front_page() ){
+  
+     	    wp_enqueue_style( 'swiper', get_template_directory_uri() . '/css/plugins/swiper.min.css', array(), '' );
+
+ 	}
+
+	wp_enqueue_style( 'mCustomScrollbar', get_template_directory_uri() . '/css/plugins/jquery.mCustomScrollbar.min.css', array(), '' );
+
+	wp_enqueue_style( 'fancybox', get_template_directory_uri() . '/css/plugins/jquery.fancybox.css', array(), '' );
+
+	wp_enqueue_style( 'slick', get_template_directory_uri() . '/css/plugins/slick.css', array(), '' );
+
+	wp_enqueue_style( 'style', get_template_directory_uri() . '/css/style.css', array(), '' );
+
+
+	// Load the javascripts
+	wp_enqueue_script( 'mousewheel', get_template_directory_uri() . '/js/plugins/jquery.mousewheel.min.js', array( 'jquery' ), '', true );
+
+	wp_enqueue_script( 'isotope', get_template_directory_uri() . '/js/plugins/isotope.pkgd.min.js', array(), '', true );
+
+	wp_enqueue_script( 'flexslider', get_template_directory_uri() . '/js/plugins/jquery.flexslider-min.js', array('jquery'), '', true );
+	
+	wp_enqueue_script( 'slick', get_template_directory_uri() . '/js/plugins/slick.min.js', array(), '', true );
+
+	if( is_page( array(551, 99) ) ){ //contact,donor page
+    
+	    wp_enqueue_script( 'scrolloverflow', get_template_directory_uri() . '/js/plugins/scrolloverflow.min.js', array(), '', true );
+	}
+//	wp_enqueue_script( 'fullpage', get_template_directory_uri() . '/js/plugins/jquery.fullPage.min.js', array('jquery'), '', true );
+	
+	wp_enqueue_script( 'scrollify', get_template_directory_uri() . '/js/plugins/jquery.scrollify.min.js', array('jquery'), '', true );
+
+	wp_enqueue_script( 'matchHeight', get_template_directory_uri() . '/js/plugins/jquery.matchHeight-min.js', array('jquery'), '', true );
+
+	wp_enqueue_script( 'inview', get_template_directory_uri() . '/js/plugins/jquery.inview.min.js', array('jquery'), '', true );
+
+	wp_enqueue_script( 'main', get_template_directory_uri() . '/js/main.js', array(), '', true );
+
+	if( is_page( array(639) ) ) {
+	    wp_enqueue_script('three', get_template_directory_uri() . '/js/plugins/three.min.js', array(), '', true);    
+	    wp_enqueue_script('OrbitControls', get_template_directory_uri() . '/js/plugins/OrbitControls.js', array(), '', true);    
+	    wp_enqueue_script('tween', get_template_directory_uri() . '/js/plugins/tween.js', array(), '', true);    
+	    wp_enqueue_script('map', get_template_directory_uri() . '/js/map.js', array(), '', true);    
+	}
+
+
+}
+add_action( 'wp_enqueue_scripts', 'inbar_scripts' );
+
+function inbar_nop($text) {
+	$remove_tags = array(
+        '<p>'   => '',
+        '</p>'  => '',
+    );
+    return strtr($text, $remove_tags);
+}
+
+/**
+ * Adds custom classes to the array of body classes.
+ *
+ * @since Twenty Sixteen 1.0
+ *
+ * @param array $classes Classes for the body element.
+ * @return array (Maybe) filtered body classes.
+ */
+function inbar_body_classes( $classes ) {
+	// Adds a class of custom-background-image to sites with a custom background image.
+	if ( is_page_template('template-partners.php') ) {   //partners page
+		$classes[] = 'partner';
+	}
+
+	if ( is_page_template('template-socialwall.php') ) {   //socialwall page
+		$classes[] = 'social-wall';
+	}
+
+
+	if ( is_page_template('template-about.php') ) {   //mission page
+		$classes[] = 'about';
+	}
+
+	if ( is_front_page() || is_page_template('template-home.php') ) {   //homepage
+		$classes[] = 'home';
+	}
+
+
+	if ( is_page_template( array('template-gabar.php', 'template-rc-sub.php') )) {   //Global assessment
+		$classes[] = 'global';
+		$classes[] = 'about';
+	}
+
+	if ( is_page_template('template-membership.php') ) {   //Membership
+		$classes[] = 'membership';
+	}
+
+	if ( is_home() ) {   //news page
+		$classes[] = 'news';
+	}
+     
+	if ( is_singular( 'post' ) ){ //singular news 
+
+		$classes[] = 'news-single';
+	}
+       
+	if ( is_singular( 'country' ) ){ //singular country 
+
+		$classes[] = 'countrie';
+	}
+       
+	if ( is_singular( 'programmes' ) ) {   //Membership
+		$classes[] = 'programme-category';
+	}
+
+	if ( is_page_template('template-mission.php') ) {   //Mission and strategy
+		$classes[] = 'mission';
+	}
+
+	if ( is_page_template('template-governance.php') ) {   //Mission and strategy
+		$classes[] = 'governance-page';
+	}
+
+
+	if ( is_page_template( array('template-programme-list.php', 'template-policy.php')) ) {   //Mission and strategy and policy
+		$classes[] = 'global-program';
+	}
+
+
+	if(is_page_template( array('template-rc.php', 'template-rc-detail.php') )){
+	
+		$classes[] = 'resource-center';
+	}
+
+	return $classes;
+}
+add_filter( 'body_class', 'inbar_body_classes' );
+
+/*
+ * create  new image styles for inbar theme
+ */
+function inbar_new_image_sizes(){
+   if ( function_exists( 'add_image_size' ) ) { 
+        add_image_size( 'head_background_image', 1440, 900 , array( 'center', 'center' ) );
+        add_image_size( 'governance_avatar', 130, 130 , array( 'center', 'center' ) );
+        add_image_size( 'partner_logo', 165, 9999 );
+        add_image_size( 'about_contact_side_image', 720, 900 , array( 'center', 'center' ) );
+        add_image_size( 'mobile_about_contact_side_image', 750, 462 , array( 'center', 'center' ) );
+        add_image_size( 'partner_section_in_mission_page', 1440, 766 , array( 'center', 'center' ) );
+   
+        add_image_size( 'contact_map_image', 720,  442 , array( 'center', 'center' ) );
+        add_image_size( 'project_list_image', 171,  171 , array( 'center', 'center' ) );
+	
+	add_image_size( 'project_header_image', 1440,  593 , array( 'center', 'center' ) );
+        add_image_size( 'project_map_image', 612,  382 , array( 'center', 'center' ) );
+        add_image_size( 'programme_list_image', 480,  450, array( 'center', 'center' ) );
+	
+	add_image_size( 'pakistan_side_image', 743,  937 , array( 'center', 'center' ) );
+	
+	add_image_size( 'country_flag_image', 999999,  60 );
+	add_image_size( 'news_promoted_image', 311,  619, array( 'center', 'center' ) );
+
+	//news list page and single news page 
+	add_image_size( 'news_list_image', 311,  112, array( 'center', 'center' ) );
+	add_image_size( 'news_single_pc_image', 1440,  519, array( 'center', 'center' ) );
+	add_image_size( 'news_single_mobile_image', 750,  552, array( 'center', 'center' ) );
+	// resource center detail page avatar
+	add_image_size( 'rc_detail_avatar_image', 146,  153, array( 'center', 'center' ) );
+	//homepage resource center
+	add_image_size( 'homepage_resource_center_image', 164,  164, array( 'center', 'center' ) );
+    }
+ }
+ add_action('after_setup_theme', 'inbar_new_image_sizes');
+ 
+ 
+ 
+ /*
+ * register header menu and footer menu
+ */
+ function inbar_register_menus() {
+       register_nav_menus(
+	       array(
+	         'header-menu' => __( 'Header Menu' ),
+		 'footer-menu' => __( 'Footer Menu' ),
+		 'header-right-menu' => __( 'Header Right Menu' ),
+		 'resource-platform-footer-menu' => __( 'Resource Platform Footer Menu' )
+	            )
+          );
+        }
+ add_action( 'init', 'inbar_register_menus' );
+
+
+ /*
+  * customize footer menu walk
+  */
+ class Inbar_Footer_Menu extends Walker_Nav_Menu {
+
+     public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+		if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+			$t = '';
+			$n = '';
+		} else {
+			$t = "\t";
+			$n = "\n";
+		}
+		$indent = ( $depth ) ? str_repeat( $t, $depth ) : '';
+
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+		$classes[] = 'menu-item-' . $item->ID;
+		$classes[] = 'footer__menu-item';
+
+		/**
+		 * Filters the arguments for a single nav menu item.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param WP_Post  $item  Menu item data object.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$args = apply_filters( 'nav_menu_item_args', $args, $item, $depth );
+
+		/**
+		 * Filters the CSS class(es) applied to a menu item's list item element.
+		 *
+		 * @since 3.0.0
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param array    $classes The CSS classes that are applied to the menu item's `<li>` element.
+		 * @param WP_Post  $item    The current menu item.
+		 * @param stdClass $args    An object of wp_nav_menu() arguments.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 */
+		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth ) );
+		$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+
+		/**
+		 * Filters the ID applied to a menu item's list item element.
+		 *
+		 * @since 3.0.1
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param string   $menu_id The ID that is applied to the menu item's `<li>` element.
+		 * @param WP_Post  $item    The current menu item.
+		 * @param stdClass $args    An object of wp_nav_menu() arguments.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 */
+		$id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args, $depth );
+		$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
+
+		$output .= $indent . '<li' . $id . $class_names .'>';
+
+		$atts = array();
+		$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
+		$atts['target'] = ! empty( $item->target )     ? $item->target     : '';
+		$atts['rel']    = ! empty( $item->xfn )        ? $item->xfn        : '';
+		$atts['href']   = ! empty( $item->url )        ? $item->url        : '';
+
+		/**
+		 * Filters the HTML attributes applied to a menu item's anchor element.
+		 *
+		 * @since 3.6.0
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param array $atts {
+		 *     The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+		 *
+		 *     @type string $title  Title attribute.
+		 *     @type string $target Target attribute.
+		 *     @type string $rel    The rel attribute.
+		 *     @type string $href   The href attribute.
+		 * }
+		 * @param WP_Post  $item  The current menu item.
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth );
+
+		$attributes = '';
+		foreach ( $atts as $attr => $value ) {
+			if ( ! empty( $value ) ) {
+				$value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
+				$attributes .= ' ' . $attr . '="' . $value . '"';
+			}
+		}
+
+		/** This filter is documented in wp-includes/post-template.php */
+		$title = apply_filters( 'the_title', $item->title, $item->ID );
+
+		/**
+		 * Filters a menu item's title.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param string   $title The menu item's title.
+		 * @param WP_Post  $item  The current menu item.
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$title = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
+
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'>';
+		$item_output .= $args->link_before . $title . $args->link_after;
+		$item_output .= '</a>';
+		$item_output .= $args->after;
+
+		/**
+		 * Filters a menu item's starting output.
+		 *
+		 * The menu item's starting output only includes `$args->before`, the opening `<a>`,
+		 * the menu item's title, the closing `</a>`, and `$args->after`. Currently, there is
+		 * no filter for modifying the opening and closing `<li>` for a menu item.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string   $item_output The menu item's starting HTML output.
+		 * @param WP_Post  $item        Menu item data object.
+		 * @param int      $depth       Depth of menu item. Used for padding.
+		 * @param stdClass $args        An object of wp_nav_menu() arguments.
+		 */
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+	}
+
+ 
+ }
+
+  /*
+  * customize header menu walk
+  */
+ class Inbar_Header_Menu extends Walker_Nav_Menu {
+
+     public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+		if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+			$t = '';
+			$n = '';
+		} else {
+			$t = "\t";
+			$n = "\n";
+		}
+		$indent = ( $depth ) ? str_repeat( $t, $depth ) : '';
+
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+		$classes[] = 'menu-item-' . $item->ID;
+		$classes[] = 'has-child';
+
+		/**
+		 * Filters the arguments for a single nav menu item.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param WP_Post  $item  Menu item data object.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$args = apply_filters( 'nav_menu_item_args', $args, $item, $depth );
+
+		/**
+		 * Filters the CSS class(es) applied to a menu item's list item element.
+		 *
+		 * @since 3.0.0
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param array    $classes The CSS classes that are applied to the menu item's `<li>` element.
+		 * @param WP_Post  $item    The current menu item.
+		 * @param stdClass $args    An object of wp_nav_menu() arguments.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 */
+		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth ) );
+		$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+
+		/**
+		 * Filters the ID applied to a menu item's list item element.
+		 *
+		 * @since 3.0.1
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param string   $menu_id The ID that is applied to the menu item's `<li>` element.
+		 * @param WP_Post  $item    The current menu item.
+		 * @param stdClass $args    An object of wp_nav_menu() arguments.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 */
+		$id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args, $depth );
+		$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
+
+		if( $depth == 0){
+		    
+			$output .= $indent . '<ul class="main-menu__item"><li' . $id . $class_names .'>';
+                }else{
+		
+		        $output .= $indent . '<li' . $id . $class_names .'>';
+		}
+		$atts = array();
+		$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
+		$atts['target'] = ! empty( $item->target )     ? $item->target     : '';
+		$atts['rel']    = ! empty( $item->xfn )        ? $item->xfn        : '';
+		$atts['href']   = ! empty( $item->url )        ? $item->url        : '';
+
+		/**
+		 * Filters the HTML attributes applied to a menu item's anchor element.
+		 *
+		 * @since 3.6.0
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param array $atts {
+		 *     The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+		 *
+		 *     @type string $title  Title attribute.
+		 *     @type string $target Target attribute.
+		 *     @type string $rel    The rel attribute.
+		 *     @type string $href   The href attribute.
+		 * }
+		 * @param WP_Post  $item  The current menu item.
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth );
+
+		$attributes = '';
+		foreach ( $atts as $attr => $value ) {
+			if ( ! empty( $value ) ) {
+				$value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
+				$attributes .= ' ' . $attr . '="' . $value . '"';
+			}
+		}
+
+		/** This filter is documented in wp-includes/post-template.php */
+		$title = apply_filters( 'the_title', $item->title, $item->ID );
+
+		/**
+		 * Filters a menu item's title.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param string   $title The menu item's title.
+		 * @param WP_Post  $item  The current menu item.
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$title = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
+
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'>';
+		$item_output .= $args->link_before . $title . $args->link_after;
+		$item_output .= '</a>';
+		$item_output .= $args->after;
+
+		/**
+		 * Filters a menu item's starting output.
+		 *
+		 * The menu item's starting output only includes `$args->before`, the opening `<a>`,
+		 * the menu item's title, the closing `</a>`, and `$args->after`. Currently, there is
+		 * no filter for modifying the opening and closing `<li>` for a menu item.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string   $item_output The menu item's starting HTML output.
+		 * @param WP_Post  $item        Menu item data object.
+		 * @param int      $depth       Depth of menu item. Used for padding.
+		 * @param stdClass $args        An object of wp_nav_menu() arguments.
+		 */
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+	}
+
+	/**
+	 * Ends the element output, if needed.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @see Walker::end_el()
+	 *
+	 * @param string   $output Passed by reference. Used to append additional content.
+	 * @param WP_Post  $item   Page data object. Not used.
+	 * @param int      $depth  Depth of page. Not Used.
+	 * @param stdClass $args   An object of wp_nav_menu() arguments.
+	 */
+	public function end_el( &$output, $item, $depth = 0, $args = array() ) {
+		if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+			$t = '';
+			$n = '';
+		} else {
+			$t = "\t";
+			$n = "\n";
+		}
+	
+		if($depth == 0){
+		    $output .= "</li></ul>{$n}";
+		}else{	
+		    $output .= "</li>{$n}";
+		}
+	}
+
+ 
+ }
+
+/**
+ * Generate custom search form
+ *
+ * @param string $form Form HTML.
+ * @return string Modified form HTML.
+ */
+ function inbar_search_form( $form ) {
+
+     $form = '
+      <form role="search" method="get" id="searchform"  action="' . home_url( '/' ) . '" >
+     <input type="text" value="' . get_search_query() . '" name="s" id="s" class="search__form-field" autocomplete="off" placeholder="Search...">
+     <input type="submit" id="searchsubmit" value="'. esc_attr__( 'Search' ) .'" />
+     </form>';
+		 
+    return $form;
+
+ }
+ add_filter( 'get_search_form', 'inbar_search_form' );
+
+
+ // limit search results on specific post types
+ function inbar_search_limit_post_type($query) {
+
+         if ($query->is_search && !is_admin() ) {
+	             $query->set('post_type',array('country', 'page', 'post', 'project', 'programmes'));
+		         }
+
+	 return $query;
+ }
+
+ add_filter('pre_get_posts','inbar_search_limit_post_type');
+
+
+
+
+/**
+ * Generate custom search form and social media
+ * @return string Modified form HTML.
+ */
+ 
+ function inbar_social_share(){
+
+  global $inbar_options;
+
+   $social = ' 
+      <ul>
+      <li><a class="search-btn" href="#" target="_blank" title="search"></a></li>';
+  
+   if( !empty($inbar_options['twitter']) ){
+        $social .= ' <li><a class="fa fa-twitter" href="' . $inbar_options['twitter'] . '" target="_blank" title="twitter"></a></li>'; 
+   }
+
+   if( !empty($inbar_options['facebook']) ){
+        $social .= ' <li><a class="fa fa-facebook" href="' . $inbar_options['facebook'] . '" target="_blank" title="facebook"></a></li>'; 
+   }
+
+    if( !empty($inbar_options['linkedin']) ){
+        $social .= ' <li><a class="fa fa-linkedin" href="' . $inbar_options['linkedin'] . '" target="_blank" title="linkedin"></a></li>'; 
+    }
+    
+   if( !empty($inbar_options['sina']) ){
+        $social .= ' <li><a class="fa fa-weibo" href="' . $inbar_options['sina'] . '" target="_blank" title="weibo"></a></li>'; 
+   }
+  
+   $social .= ' <li><a class="fa fa-weixin" href="' .get_template_directory_uri() .'/images/barc-wechat-code-png.png" target="_blank" title="wechat"></a></li>'; 
+
+   if( !empty($inbar_options['youtube']) ){
+        $social .= ' <li><a class="fa fa-youtube" href="' . $inbar_options['youtube'] . '" target="_blank" title="youtube"></a></li>'; 
+   }
+
+   if( !empty($inbar_options['flickr']) ){
+        $social .= ' <li><a class="fa fa-flickr" href="' . $inbar_options['flickr'] . '" target="_blank" title="flickr"></a></li>'; 
+   }
+
+   $social .='</ul>';
+ 
+ return $social;
+ 
+ }
+
+/*
+ *
+ * remove dns prefetch
+ *
+ */
+
+ function inbar_remove_dns_prefetch( $hints, $relation_type ) {
+         if ( 'dns-prefetch' === $relation_type ) {
+	             return array_diff( wp_dependencies_unique_hosts(), $hints );
+		         }
+
+	     return $hints;
+ }
+
+ add_filter( 'wp_resource_hints', 'inbar_remove_dns_prefetch', 10, 2 );
+ remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+ remove_action( 'wp_print_styles', 'print_emoji_styles' );
+ add_theme_support( 'post-thumbnails' );
+
+
+ // add class to prev and next post link
+ add_filter('next_post_link', 'next_post_link_attributes');
+ add_filter('previous_post_link', 'prev_post_link_attributes');
+
+ function prev_post_link_attributes($output) {
+         $code = 'class="prev"';
+	 return str_replace('<a href=', '<a '.$code.' href=', $output);
+ }
+
+ function next_post_link_attributes($output) {
+         $code = 'class="next"';
+	 return str_replace('<a href=', '<a '.$code.' href=', $output);
+ }
+
+
+
+ //language switcher
+
+function inbar_language_switcher() {
+
+      $languages = icl_get_languages( 'skip_missing=0&orderby=KEY&order=DIR&link_empty_to=str' );
+
+      $la = '';
+
+    if( !empty($languages) ){
+     
+    foreach ( $languages as $lang ) {
+
+	$la .= '<div class="header__lang-switcher ' . ( $lang['active'] ? 'active' : ''  ) . '"><a href=' . $lang['url'] . '>' . $lang['translated_name'] . "</a></div>";
+      }
+
+     return $la;
+    }
+
+}
+
+//social share on post detail page
+function inbar_social_sharing_buttons($pid) {
+       
+        $content = '';
+	$currentURL = urlencode(get_permalink($pid));
+	$currentTitle = str_replace( ' ', '%20', get_the_title($pid));
+	$twitterURL = 'https://twitter.com/intent/tweet?text='.$currentTitle.'&amp;url='.$currentURL;
+
+	$facebookURL = 'https://www.facebook.com/sharer/sharer.php?u='.$currentURL;
+        
+	$content .= '<li><a class="fa fa-twitter" href="'. $twitterURL .'" target="_blank"></a></li>';
+	$content .= '<li><a class="fa fa-facebook" href="'.$facebookURL.'" target="_blank"></a></li>';
+	
+	return $content;
+};
+
+//header return to homepage
+function inbar_header_to_home(){
+
+   return '<header class="header"><a class="header__logo" href="' .get_home_url() .'"><img src="' . get_template_directory_uri() . '/images/logo.jpg" alt="Inbar"><small>Website under maintenance</small></a>';
+}
+
+
+//get current category slug
+
+function inbar_get_categories( $slug ) {
+   
+    $categories = get_categories(array('type' => 'post','child_of' => 0,'orderby' => 'name','order' => 'ASC','hide_empty' => true));
+  
+     $lists = '<li><a class="all" href="'. get_permalink(773). '#2">' . __('All', 'inbar'). '</a></li>';
+
+    foreach( $categories  as $category) {
+
+	$lists .= '<li><a class="' . esc_attr($category->slug ) . '" href="' . esc_url( get_category_link( $category->term_id ) ) . '#2">'. __(esc_attr( $category->name ), 'inbar') .'</a></li>';
+    
+   }	
+
+  
+   $lists .= '<script>
+        jQuery(document).ready(function() {
+           jQuery("li a").each(function() {
+	        if (jQuery(this).hasClass("'.$slug.'")) {
+		     jQuery(this).addClass("active");
+                }
+           });
+
+        });   
+       </script>';
+
+     return $lists;
+
+}
+
+/*
+  * customize header right menu walk
+  */
+ class Inbar_Header_Right_Menu extends Walker_Nav_Menu {
+
+     public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+		if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+			$t = '';
+			$n = '';
+		} else {
+			$t = "\t";
+			$n = "\n";
+		}
+		$indent = ( $depth ) ? str_repeat( $t, $depth ) : '';
+
+		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+		$classes[] = 'menu-item-' . $item->ID;
+
+		/**
+		 * Filters the arguments for a single nav menu item.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param WP_Post  $item  Menu item data object.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$args = apply_filters( 'nav_menu_item_args', $args, $item, $depth );
+
+		/**
+		 * Filters the CSS class(es) applied to a menu item's list item element.
+		 *
+		 * @since 3.0.0
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param array    $classes The CSS classes that are applied to the menu item's `<li>` element.
+		 * @param WP_Post  $item    The current menu item.
+		 * @param stdClass $args    An object of wp_nav_menu() arguments.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 */
+		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth ) );
+		$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+
+		/**
+		 * Filters the ID applied to a menu item's list item element.
+		 *
+		 * @since 3.0.1
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param string   $menu_id The ID that is applied to the menu item's `<li>` element.
+		 * @param WP_Post  $item    The current menu item.
+		 * @param stdClass $args    An object of wp_nav_menu() arguments.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 */
+		$id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args, $depth );
+		$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
+
+	        $output .= $indent . '<li' . $id . $class_names .'>';
+	
+		$atts = array();
+		$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
+		$atts['target'] = ! empty( $item->target )     ? $item->target     : '';
+		$atts['rel']    = ! empty( $item->xfn )        ? $item->xfn        : '';
+		$atts['href']   = ! empty( $item->url )        ? $item->url        : '';
+
+		/**
+		 * Filters the HTML attributes applied to a menu item's anchor element.
+		 *
+		 * @since 3.6.0
+		 * @since 4.1.0 The `$depth` parameter was added.
+		 *
+		 * @param array $atts {
+		 *     The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+		 *
+		 *     @type string $title  Title attribute.
+		 *     @type string $target Target attribute.
+		 *     @type string $rel    The rel attribute.
+		 *     @type string $href   The href attribute.
+		 * }
+		 * @param WP_Post  $item  The current menu item.
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth );
+
+		$attributes = '';
+		foreach ( $atts as $attr => $value ) {
+			if ( ! empty( $value ) ) {
+				$value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
+				$attributes .= ' ' . $attr . '="' . $value . '"';
+			}
+		}
+
+		/** This filter is documented in wp-includes/post-template.php */
+		$title = apply_filters( 'the_title', $item->title, $item->ID );
+
+		/**
+		 * Filters a menu item's title.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param string   $title The menu item's title.
+		 * @param WP_Post  $item  The current menu item.
+		 * @param stdClass $args  An object of wp_nav_menu() arguments.
+		 * @param int      $depth Depth of menu item. Used for padding.
+		 */
+		$title = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
+
+		$item_output = $args->before;
+		$item_output .= '<a'. $attributes .'>';
+		$item_output .= $args->link_before . $title . $args->link_after;
+		$item_output .= '</a>';
+		$item_output .= $args->after;
+
+		/**
+		 * Filters a menu item's starting output.
+		 *
+		 * The menu item's starting output only includes `$args->before`, the opening `<a>`,
+		 * the menu item's title, the closing `</a>`, and `$args->after`. Currently, there is
+		 * no filter for modifying the opening and closing `<li>` for a menu item.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string   $item_output The menu item's starting HTML output.
+		 * @param WP_Post  $item        Menu item data object.
+		 * @param int      $depth       Depth of menu item. Used for padding.
+		 * @param stdClass $args        An object of wp_nav_menu() arguments.
+		 */
+		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+	}
+
+	/**
+	 * Ends the element output, if needed.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @see Walker::end_el()
+	 *
+	 * @param string   $output Passed by reference. Used to append additional content.
+	 * @param WP_Post  $item   Page data object. Not used.
+	 * @param int      $depth  Depth of page. Not Used.
+	 * @param stdClass $args   An object of wp_nav_menu() arguments.
+	 */
+	public function end_el( &$output, $item, $depth = 0, $args = array() ) {
+		if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+			$t = '';
+			$n = '';
+		} else {
+			$t = "\t";
+			$n = "\n";
+		}
+	
+	   $output .= "</li>{$n}";
+	}
+
+ 
+ }
+
+function inbar_get_resources() {
+    $result = file_get_contents( dirname(__FILE__).'/json-sample.json' );
+    return json_decode($result, true);
+}
+
+
+function inbar_get_resources_for_gabar(){
+
+  if( LOCAL_JSON ){ return inbar_get_resources(); }
+
+    $getdata = http_build_query(
+         array(
+	'act'      => 2,
+	'checksum' => MD5('ceshentingyu'),
+	'GABAR'	   => 1,
+	'num'      => 3,
+	'page'     => 1
+     )
+    );
+
+    $results = file_get_contents('http://resource.inbar.int/api/InbarPublication.php?'. $getdata);
+
+   return  json_decode($results, true);
+ 
+}
+
+function inbar_get_resources_for_single_country( $key ){
+
+  if( LOCAL_JSON ){ return inbar_get_resources(); }
+
+    $getdata = http_build_query(
+         array(
+	'act'      => 3,
+	'checksum' => MD5('ceshentingyu'),
+	'countries'  => trim($key),
+	'num'      => 12,
+	'page'     => 1
+     )
+    );
+
+    $results = file_get_contents('http://resource.inbar.int/api/InbarPublication.php?'. $getdata);
+
+   return  json_decode($results, true);
+} 
+
+function inbar_get_resources_for_single_project( $status ){
+
+  if( LOCAL_JSON ){ return inbar_get_resources(); }
+
+    $getdata = http_build_query(
+         array(
+	'act'      => 4,
+	'checksum' => MD5('ceshentingyu'),
+	'Project_Status' => trim($status),
+	'num'      => 12,
+	'page'     => 1
+     )
+    );
+
+    $results = file_get_contents('http://resource.inbar.int/api/InbarPublication.php?'. $getdata);
+
+   return  json_decode($results, true);
+} 
+
+
+
+//get twitter feed on homepage
+function inbar_get_twitters_on_homepage(){
+
+    // auth parameters
+    $api_key = urlencode('zERAdvDq8s2NlYvdQmmna4kK1'); // Consumer Key (API Key)
+    $api_secret = urlencode('gtrenuxmTQO4Hw2PKL2bYr1jquOv7BeplF61p31o1zBlNJbxSq'); // Consumer Secret (API Secret)
+    $auth_url = 'https://api.twitter.com/oauth2/token'; 
+
+    // what we want?
+    $data_username = 'INBARofficial'; // username
+    $data_count = 4; // number of tweets
+    $data_url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+
+    // get api access token
+    $api_credentials = base64_encode($api_key.':'.$api_secret);
+
+    $auth_headers = 'Authorization: Basic '.$api_credentials."\r\n".
+	                'Content-Type: application/x-www-form-urlencoded;charset=UTF-8'."\r\n";
+
+    $auth_context = stream_context_create(
+	    array(
+		    'http' => array(
+		    'header' => $auth_headers,
+		    'method' => 'POST',
+		    'content'=> http_build_query(array('grant_type' => 'client_credentials', )),
+		    )
+		)
+	    );
+
+    $auth_response = json_decode(file_get_contents($auth_url, 0, $auth_context), true);
+    $auth_token = $auth_response['access_token'];
+
+    // get tweets
+    $data_context = stream_context_create( array( 'http' => array( 'header' => 'Authorization: Bearer '.$auth_token."\r\n", ) ) );
+
+    $data = json_decode(file_get_contents($data_url.'?count='.$data_count.'&screen_name='.urlencode($data_username), 0, $data_context), true);
+
+     return $data;
+}
+
+
+
+//function to convert text url into links.
+function inbar_twitter_feeds_clickable_links($s) {
+      return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a target="blank" rel="nofollow" href="$1" target="_blank">$1</a>', $s);
+}
+
+
+
+//function twitter time
+function inbar_twitter_time( $t ) {
+	
+	    date_default_timezone_set('America/New_York');
+	    // Get Current Server Time
+	    $server_time = $_SERVER['REQUEST_TIME'];
+	    // Convert Twitter Time to UNIX
+	    $new_tweet_time = strtotime($t);
+	    // Set Up Output for the Timestamp if over 24 hours
+	    $this_tweet_day =  date('D. M j, Y', strtotime($t));
+	    // Subtract Twitter time from current server time
+	    $time = $server_time - $new_tweet_time;		
+	    // less than an hour, output 'minutes' messaging
+	    if( $time < 3599) {
+	    $time = round($time / 60) . ' minutes ago';
+	    }
+	    // less than a day but over an hour, output 'hours' messaging 
+	    else if ($time >= 3600 && $time <= 86400) {
+	    $time = round($time / 3600) . ' hours ago';
+	    }
+	    // over a day, output the $tweet_day formatting
+	    else if ( $time > 86400)  {
+	    $time = $this_tweet_day;
+	    }
+	    // return final time from tweetTime()
+	    return $time;
+
+ }
+
+
+//function project id group by project status on programme page
+
+function inbar_project_group_by_status( $pids=array() ){
+
+    $terms = get_terms([
+	    'taxonomy' => 'project_status',
+	     'hide_empty' => false,
+	    ]);
+
+  $group = array();
+  
+    foreach( $terms as $term){
+    
+     $group[ $term->slug]= '';
+    
+    }
+
+   foreach( $pids as $pid ){
+
+    $p_terms = wp_get_object_terms( $pid,  'project_status' );
+            
+    foreach( $p_terms as $pt ){
+      
+       $group[$pt->slug][] = $pid;   
+   
+   }
+
+ }
+
+  return $group;
+
+}
+
+
+/* get the next and prev page link */
+
+function inbar_resource_next_prev_link($pid, $offset = 1, $strict = true) {
+
+   $rc_res = get_field('resources', 1994); //get all the page link on resource center
+   $rc_total_page = array(); 
+
+     if( $rc_res ){
+	
+	  foreach( $rc_res as $rc_re){
+	   $rc_total_page[] = $rc_re['resource_detail_link'];
+	 }
+
+     }
+
+  $count = count($rc_total_page);
+
+   if( $count ){
+ 
+       $current_value = get_permalink($pid);
+  
+       $current_key = array_search($current_value, $rc_total_page, $strict);
+
+     if( ($current_key + $offset) >= $count ) {
+
+	 return reset( $rc_total_page );
+      
+	 }elseif( ($current_key + $offset) < 0 ){
+
+	 return end( $rc_total_page );
+      
+	}else{
+
+	 return $rc_total_page[$current_key + $offset];
+     
+	}
+   }
+
+}
+
+
+//remove wordpress body classes on search result page 
+
+add_filter('body_class','inbar_remove_search_body_classes');
+function inbar_remove_search_body_classes($classes) {
+    
+    if(is_search()) {
+
+	return array();
+
+        } else {
+
+        return $classes;
+     }
+
+}
+
+
+
+// customize search results number on search result page
+
+function inbar_set_search_number_per_page($queryVars) {
+	if ( !empty($_REQUEST['s']) ){ 
+	    $queryVars['posts_per_page'] = 5; 
+
+	}
+	    return $queryVars; 
+}
+add_filter('request', 'inbar_set_search_number_per_page'); 
+
+
+//get all policy detail page id 
+
+function inbar_get_all_policy_ids( $per_page = -1, $not_in = '' ){
+
+    global $wpdb; 
+    $policy_ids = array();
+
+    $policy_args = array(
+             'post_type' => 'page',
+	     'post_status' => 'publish',
+	     'posts_per_page'=> $per_page,
+	     'post__not_in' => array( $not_in ),
+	     'meta_query' => array(
+	              array(
+	                   'key' => '_wp_page_template',
+    	                   'value' => 'template-policy-detail.php' 
+    	    	      )
+    	        )
+          );
+
+    $policy = new WP_Query($policy_args);
+	    
+	if( $policy->have_posts() ){
+       
+	    while( $policy->have_posts() ){
+
+		$policy->the_post();
+	        $policy_ids[] = get_the_ID();
+	    }
+    
+        wp_reset_postdata();
+    }
+
+     return $policy_ids; 
+}
+
+
+//filter partners relationship field on partners page
+function inbar_acf_relationship_filter_publish( $value, $post_id, $field )
+{
+        // run the_content filter on all textarea values
+        $returned_value = array();
+	    foreach($value as $key => $id){
+    	        if( get_post_status( $id ) == 'publish' ){
+	        $returned_value[] = $id;
+    	    	 }
+        }
+	    return $returned_value;
+}
+add_filter('acf/load_value/type=relationship', 'inbar_acf_relationship_filter_publish', 10, 3);
+
+
+
+//get all the non-sub category of people 
+
+function inbar_get_anchor_for_governance(){
+
+
+$anchor = '<div class="governance__cat"><a href="'. get_permalink(639).'" class="btn green">'. __('Council', 'inbar'). '</a>';
+
+$terms = get_terms( array(
+         'taxonomy' => 'department',
+	 'hide_empty' => false,
+	) );
+foreach( $terms as $term ){
+
+    if( !$term->parent ){
+    $anchor .= '<a href="#' . $term->slug . '" class="btn green">'. esc_html($term->name) .'</a>';
+    }
+
+}
+
+$anchor .= '</div>';
+
+return $anchor;
+
+}
+
+//output sinlge person 
+
+function inbar_output_single_person( $term_id ){
+
+    $p_item = '';
+    $p_items = array();
+
+    $args = array(
+	    'post_type' => 'people',
+	    'post_status' => 'publish',
+	    'orderby' => 'menu_order',
+	    'order'   => 'ASC',
+	    'tax_query' => array(
+		    array(
+		    'taxonomy' => 'department',
+		    'field'    => 'term_id',
+		    'terms'    => array($term_id ),
+		    ),
+	    ),
+	    'posts_per_page'	=> -1
+	);
+   
+    $query = new WP_Query( $args );
+
+    if( $query->have_posts() ){
+
+	while( $query->have_posts()){
+
+	    $query->the_post();
+
+		 $avatar = get_field('avatar');
+	         $avatar_s = $avatar ? '<div class="scale member__photo"><img src="' . $avatar['sizes']['governance_avatar'] . '"></div>' : '';
+		 $name = get_the_title();
+		 $nationality = get_field('nationality') ? '<div class="member__label"><b>'. __('Nationality', 'inbar') .':</b>' . get_field('nationality') . '</div>' : '';
+		 $profession = get_field('profession') ? '<div class="member__label"><b>' . __('Profession', 'inbar') .':</b>'. get_field('profession') .'</div>' : '';
+
+	       	$p_items[] .= '<div class="member__item">
+				' . $avatar_s . '<div class="member__info">
+				<strong class="member__name">' . $name . $nationality . $profession .'
+				</strong>
+			    </div>
+			 </div>';
+
+	}
+      wp_reset_postdata();
+
+    }
+
+
+    $total_count = count($p_items);
+
+     if( $total_count ){
+	 $p_length  = ceil($total_count/8);
+         $append_value = '<div class="member__item"></div>';
+	 $p_items = array_pad( $p_items, 8*$p_length, $append_value);
+
+         foreach (array_chunk($p_items, 8, true) as $array){
+	 
+             $p_item .= '<div class="member__slide">';
+	     $p_item .= implode('', $array);
+	     $p_item .= '</div>';
+	 } 
+   }
+return $p_item; 
+
+}
+
+
+//output sub category list of a category 
+
+function inbar_output_sub_list_of_category( $term_id, $position=false ){
+
+ $option = '';
+ //$child_term_ids = get_term_children( $term_id, 'department' );
+
+ $child_term_ids = array();
+
+ $child_terms = get_terms('department', array( 
+     
+     'child_of' => $term_id,
+     'orderby'  => 'term_id',
+     'order'    => 'ASC',
+    ) );
+
+
+
+ foreach( $child_terms as $child ){
+ 
+    $child_term_ids[] = $child->term_id; 
+ }
+
+
+
+ if( $position ){
+   
+   $option .= '<select name="position">';
+
+    foreach( $child_term_ids as $child_term_id ){
+
+     $child_name =  get_term_by( 'term_id', $child_term_id, 'department');
+
+    $option .= '<option value="HR Officer">'. $child_name->name .'</option>'; 
+
+   }
+
+   $option .= '</select>';
+
+  }else{
+
+ $option .= '<ul class="careers__position-list">';
+ 
+    foreach( $child_term_ids as $nu => $child_term_id ){
+
+     $child_name =  get_term_by( 'term_id', $child_term_id, 'department');
+
+    	if( $nu == 0){
+    
+ 	    $option .= '<li class="active"><a href="#">' .$child_name->name . '</a></li>'; 
+
+	}else{
+
+         $option .= '<li><a href="#">'.$child_name->name .'</a></li>'; 
+        }
+
+    }
+
+ $option .= '</ul>'; 
+ } 
+
+return $option; 
+}
+
+//output sinlge person 
+
+function inbar_output_single_person_for_board( $term_id ){
+
+  //$persons = get_objects_in_term( $term_id, 'people');
+    $p_item = '';
+
+    $args = array(
+	    'post_type' => 'people',
+	    'post_status' => 'publish',
+	    'orderby' => 'menu_order',
+	    'order'   => 'ASC',
+	    'tax_query' => array(
+		    array(
+		    'taxonomy' => 'department',
+		    'field'    => 'term_id',
+		    'terms'    => array($term_id ),
+		    ),
+	    ),
+
+	    'posts_per_page'	=> -1
+	);
+   
+    $query = new WP_Query( $args );
+
+    if( $query->have_posts() ){
+
+	while( $query->have_posts()){
+
+	    $query->the_post();
+
+		 $avatar = get_field('avatar');
+	         $avatar_s = $avatar ? '<div class="scale member__photo"><img src="' . $avatar['sizes']['governance_avatar'] . '"></div>' : '';
+		 $name = get_the_title();
+		 $nationality = get_field('nationality') ? '<div class="member__label"><b>'. __('Nationality', 'inbar') .':</b>' . get_field('nationality') . '</div>' : '';
+		 $profession = get_field('profession') ? '<div class="member__label"><b>' . __('Profession', 'inbar') .':</b>'. get_field('profession') .'</div>' : '';
+
+	       	$p_item .= '<div class="member__item">
+				' . $avatar_s . '<div class="member__info">
+				<strong class="member__name">' . $name . $nationality . $profession .'
+				</strong>
+			    </div>
+			 </div>';
+
+	}
+      wp_reset_postdata();
+
+    }
+
+return $p_item; 
+
+}
+
+
+
+
+//override cpt ui label to make it translatable
+
+function inbar_override_cptui_label( $args ){
+       
+	    $args['labels']['name'] = __($args['labels']['name'], 'CPT Label');
+	    $args['labels']['singular_name'] = __($args['labels']['singular_name'], 'CPT Label');
+
+	return $args;
+}
+
+add_filter('cptui_pre_register_post_type', 'inbar_override_cptui_label');
+
+
+function inbar_override_cptui_tag_label( $args ){
+
+	$args['labels']['name'] = __($args['labels']['name'], 'CPT Label');
+	$args['labels']['singular_name'] = __($args['labels']['singular_name'], 'CPT Label');
+
+       return $args;
+
+}
+
+add_filter('cptui_pre_register_taxonomy', 'inbar_override_cptui_tag_label');
+
+
+
