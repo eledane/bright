@@ -1,6 +1,6 @@
 #ignore some files
-wp-content/themes/bright/*.html
-wp-content/themes/bright/*.swap
+wp-content/themes/enchuang/*.html
+wp-content/themes/enchuang/*.swap
 .htaccess
 wp-config.php
 
