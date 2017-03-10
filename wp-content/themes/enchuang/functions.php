@@ -10,6 +10,19 @@
  */
 
 /**
+ * Load Framework to support configuration of enchuang.
+ *
+ * @since enchuang 1.0
+ */
+if ( !class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/framework/framework.php' ) ) {
+    require_once( dirname( __FILE__ ) . '/framework/framework.php' );
+ }
+
+if ( !isset( $redux_demo ) && file_exists( dirname( __FILE__ ) . '/inc/enchuang-config.php' ) ) {
+    require_once( dirname( __FILE__ ) . '/inc/enchuang-config.php' );
+}
+
+/**
  * Enqueues scripts and styles.
  *
  * @since Enchuang 1.0
