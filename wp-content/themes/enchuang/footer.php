@@ -87,45 +87,19 @@
 	  </footer>
 	  <!-- end footer -->		  	  
 	  <nav id="menu">
-	    <ul>
-	      <li><a href="index.html">Home</a></li>
-	      <li><a href="#">Sample pages</a>
-					<ul>
-						<li><a href="about.html">About Us</a></li>
-						<li><a href="about_2.html">About Us 2</a></li>
-						<li><a href="services.html">Services</a></li>	
-						<li><a href="services_2.html">Services 2</a></li>	
-						<li><a href="full-width.html">Full Width</a></li>
-						<li><a href="left-sidebar.html">Left Sidebar</a></li>	
-						<li><a href="right-sidebar.html">Right Sidebar</a></li>		
-						<li class='sub'>
-							<a href='#'>Multi-Level Drop-Down</a>
-							<ul>
-							  <li><a href='#'>Drop-Down Example</a></li>
-							  <li><a href='#'>Drop-Down Example</a></li>								
-							  <li class='last'><a href='#'>Drop-Down Example</a></li>
-							</ul>
-						</li>
-					</ul>	    
-		  </li>
-	      <li><a href="portfolio.html">Portfolio</a>
-				    <ul>
-						<li><a href="portfolio_2_cols.html">2 Columns</a></li>
-						<li><a href="portfolio_3_cols.html">3 Columns</a></li>
-						<li><a href="portfolio_4_cols.html">4 Columns</a></li>
-						<li><a href="single_project.html">Single Project</a></li>
-					</ul>		  
-		  </li>
-	      <li><a href="blog.html">Blog</a>
-					<ul>
-						<li><a href="blog.html">Right Sidebar</a></li>
-						<li><a href="blog_left_sidebar.html">Left Sidebar</a></li>
-						<li><a href="blog_full_width.html">Full Width</a></li>
-						<li><a href="blog_single_post.html">Single Post</a></li>	
-					</ul>		  
-		  </li>
-	      <li><a href="#" data-toggle="modal" data-target="#myModal">Contact us</a></li>
-	    </ul>
+
+	          <ul>
+			       <?php
+               $header_mobile_menu_args = array(
+                      'theme_location' => 'header-menu',
+                      'container'      => false,
+                      'items_wrap'     => '%3$s',
+                      'walker'         =>  new Enchuang_Header_Menu_Mobile()
+                      );
+                wp_nav_menu($header_mobile_menu_args);
+                ?>
+           </ul>
+	
 	  </nav><!-- /#nav -->	
     <!-- start modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -178,9 +152,7 @@
 	  <div class="overlay overlay-scale">
 	    <button type="button" class="overlay-close">Close</button>
 	    <div class="container">
-          <form id="header-search-form" class="center-block" method="get" action="#">
-            <input id="header-search" type="text" onblur="if (this.value == '')this.value = 'Start Typing...';" onfocus="if (this.value == 'Start Typing...')this.value = '';" autocomplete="off" style="height:150px;" value="Start Typing..." name="s">
-          </form>
+         <?php get_search_form();?> 
 	    </div>	
 	  </div><!-- /.overlay -->  
 	

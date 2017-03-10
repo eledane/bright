@@ -52,7 +52,7 @@
 		    <div class="row">
 			  <div class="col-lg-12 col-md-12 col-sm-12">
 	            <a class="responsive-menu" href="#menu"><i class="fa fa-navicon"></i></a>
-	            <a class="logo-light" href="index.html"><img src="<?php bloginfo('template_url'); ?>/img/logo_light.png" alt="" /></a>
+	            <a class="logo-light" href="<?php echo get_home_url(); ?>"><img src="<?php bloginfo('template_url'); ?>/img/logo_light.png" alt="" /></a>
                 <ul class="second-nav">				
 				  <li><a id="trigger-overlay" href="#"><i class="fa fa-search"></i></a></li>
 				</ul><!-- /.second-nav -->
