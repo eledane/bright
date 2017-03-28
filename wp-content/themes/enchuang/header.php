@@ -25,34 +25,13 @@
 	
 		  <!-- start top-wrapper -->	
       <div class="top-wrapper"> 	  
-        <div class="top-bar"> 
-		  <div class="container">
-		    <div class="row">
-			  <div class="col-lg-6 col-md-6 col-sm-6">
-			    <ul class="top-contact">
-				  <li><i class="fa fa-map-marker"></i>1234 Street Name, City Name, Location</li> 
-                  <li><a href="mailto:#"><i class="fa fa-envelope"></i>office@yourdomain.com</a></i>				  
-				</ul>
-			  </div>
-			  <div class="col-lg-6 col-md-6 col-sm-6">
-				<ul class="top-social">
-                  <li><a href="#"><i class="fa fa-facebook"></i></a></li>				
-                  <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                  <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                  <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                  <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                  <li><a href="#"><i class="fa fa-pinterest"></i></a></li>				
-				</ul>
-			  </div>			  
-		    </div>
-		  </div>
-	    </div><!-- /.top-bar -->			
+        <!-- /.top-bar -->			
 	    <div class="header">
 		  <div class="container">
 		    <div class="row">
 			  <div class="col-lg-12 col-md-12 col-sm-12">
 	            <a class="responsive-menu" href="#menu"><i class="fa fa-navicon"></i></a>
-	            <a class="logo-light" href="<?php echo get_home_url(); ?>"><img src="<?php bloginfo('template_url'); ?>/img/logo_light.png" alt="" /></a>
+	            <a class="logo-light" href="<?php echo get_home_url(); ?>"><img src="<?php bloginfo('template_url'); ?>/img/enchuang_logo.png" alt="" /></a>
                 <ul class="second-nav">				
 				  <li><a id="trigger-overlay" href="#"><i class="fa fa-search"></i></a></li>
 				</ul><!-- /.second-nav -->

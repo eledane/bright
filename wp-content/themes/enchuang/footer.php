@@ -55,14 +55,7 @@
 			    <li><i class="fa fa-phone"></i><span>Phone: +1 (234) 567-89-10</span></li>	
 			    <li><i class="fa fa-envelope"></i><span>Email: <a href="mailto:#">office@yourdomain.com</a></span></li>				
 			  </ul>	
-				<ul class="footer-social">
-				  <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-				  <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-				  <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-				  <li><a href="#"><i class="fa fa-behance"></i></a></li>
-				  <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-				  <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
-				</ul>				  
+								  
 		      </div>			  
 		    </div>			
 		  </div>		  
@@ -74,10 +67,8 @@
 	        <div class="row">			
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"><p>Copyright &copy; 2015 <a href="#">alphawd</a>. All Rights Reserved.</p></div>
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-			    <ul class="footer-menu">
-			      <li><a href="#">FAQ's</a></li>
-			      <li><a href="#">Sitemap</a></li>
-			      <li><a href="#">Contact</a></li>
+			      <ul class="footer-menu">
+			      <li>icp 111111</li>
 			    </ul>		
 		      </div>		  
 		    </div>			

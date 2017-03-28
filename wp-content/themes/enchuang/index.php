@@ -1,4 +1,8 @@
- <?php get_header(); ?> 
+ <?php get_header();
+ 
+ wp_redirect(get_home_url());
+ exit;
+ ?> 
 
 	  <!-- start content -->	
 	  <div class="content">	  

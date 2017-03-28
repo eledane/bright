@@ -91,7 +91,7 @@ a.responsive-menu { float: left; display: none; font-size: 24px; color: #fff; wi
 .white a.responsive-menu { float: left; display: none; font-size: 24px; color: #454545 !important; width: 40px; height: 40px; line-height: 100px; }
 
 /* logo */
-a.logo, a.logo-light { float: left; width: 135px; line-height: 100px; }
+a.logo, a.logo-light { float: left; width: 160px; line-height: 100px; }
 
 /* nav */
 .menu { float: right; position: relative; height: 44px; width: auto; margin-top: 25px; }
