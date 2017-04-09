@@ -4,4 +4,4 @@ wp-content/themes/enchuang/*.swap
 wp-content/themes/enchuang/alex/
 .htaccess
 wp-config.php
-
+wp-content/debug.log

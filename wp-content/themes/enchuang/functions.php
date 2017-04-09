@@ -88,6 +88,12 @@ function enchuang_new_image_sizes(){
    if ( function_exists( 'add_image_size' ) ) { 
 
 	add_image_size( 'header_background_image', 1600,  988, array( 'center', 'center' ) );
+  //product image
+	add_image_size( 'product_cover', 533,  533, array( 'center', 'center' ) );
+	add_image_size( 'product_header_background', 1920,  894, array( 'center', 'center' ) );
+	add_image_size( 'product_album', 1024,  657, array( 'center', 'center' ) );
+
+	add_image_size( 'home_news_image', 827,  453, array( 'center', 'center' ) );
 
     }
  }
@@ -441,5 +447,63 @@ class Enchuang_Header_Menu_Mobile extends Walker_Nav_Menu {
  add_filter( 'get_search_form', 'enchuang_search_form' );
 
 
+//add featured image
+add_theme_support( 'post-thumbnails' );
 
 
+
+//get product category
+function enchuang_get_product_categories( $tag = 'product_category') {
+   
+     $categories = get_terms([
+	    'taxonomy' => $tag,
+	     'hide_empty' => false,
+	    ]);
+      
+       if( $tag == 'product_category'){
+        $c_name = '产品类别';
+        }else{
+        $c_name = '新闻类别';  
+       }
+
+     $lists = '<div id="categories" class="widget posts_holder">'."\n";
+     $lists .= '<h5>' . pll__($c_name). '</h5>'."\n";
+     $lists .= '<ul>'. "\n";
+
+  foreach( $categories  as $category) {
+
+    $lists .= '<li class="cat-item">'."\n";
+    $lists .= '<a href="' . esc_url( get_category_link( $category->term_id ) ).'">' . pll__( esc_attr( $category->name )) .'</a>' ."\n";
+    $lists .= '</li>' . "\n";
+
+   }	
+
+  $lists .= '</ul>'."\n";
+  $lists .= '</div>'."\n";
+
+  return $lists;
+}
+
+
+//get product category
+function enchuang_product_center_categories() {
+   
+     $categories = get_terms([
+	    'taxonomy' => 'product_category',
+	     'hide_empty' => false,
+	    ]);
+
+     $lists = '<div class="text-center">'. "\n";
+     $lists .= '<ul class="portfolio-filter">'."\n";
+     $lists .= '<li><a class="active margin-5" href="#" data-filter="*">'.pll__('全部') . '</a></li>'."\n";
+
+  foreach( $categories  as $category) {
+
+    $lists .= '<li><a class="" href="#" data-filter=".' . esc_attr($category->slug) . '">' . pll__( esc_attr( $category->name )) . '</a></li>' ."\n";
+
+   }	
+
+  $lists .= '</ul></div>'."\n";
+
+  return $lists;
+}

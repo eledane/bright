@@ -153,30 +153,95 @@
      */
 
 // start  logo  section
- //    Redux::setSection( $opt_name, array(
- //        'title'      => __( 'Logo', 'enchuang' ),
- //        'icon'         => 'el el-picture',
- //        'fields'     => array(
- //            array(
- //                'id'       => 'header_logo',
- //                'type'     => 'media',
- //                'title'    => __( 'Upload your header logo', 'enchuang' ),
- //                'url'      => true,
- //                'description'      => 'Recommended logo size: ',
- //            ),
- //
- //            array(
- //                'id'       => 'footer_logo',
- //                'type'     => 'media',
- //                'title'    => __( 'Upload your footer logo', 'enchuang' ),
- //                'url'      => true,
- //                'description'      => 'Recommended logo size: ',
- //            )
- //
- //        )
- //    ) );
- //
+    Redux::setSection( $opt_name, array(
+        'title'      => pll__( '合作伙伴' ),
+        'icon'         => 'el el-picture',
+        'fields'     => array(
+        
+               array(
+                'id'       => 'partners',
+                'type'     => 'slides',
+                'title'    => pll__( '合作伙伴' ),
+                'placeholder' => array(
+                  'title'           => pll__('标题'),
+                  'description'     => pll__('描述'),
+                  'url'             => pll__('网址'),
+                 )
+            )
+
+        )
+    ) );
+
  //end of header setion
+
+    // -> START Footer Fields
+
+    Redux::setSection( $opt_name, array(
+        'title'      => pll__( '页脚'),
+        'icon'         => 'el-icon-cogs',
+        'fields'     => array(
+           
+           array(
+                'id'       => 'address',
+                'type'     => 'textarea',
+                'title'    => pll__( '地址' ),
+                'default'  => '',
+            ),
+           
+           array(
+                'id'       => 'cellphone',
+                'type'     => 'text',
+                'title'    => pll__( '电话' ),
+                'default'  => '',
+            ),
+           
+           array(
+                'id'       => 'email',
+                'type'     => 'text',
+                'title'    => pll__( '邮箱' ),
+                'default'  => '',
+            ),
+
+           array(
+                'id'       => 'copyright',
+                'type'     => 'text',
+                'title'    => pll__( '版权' ),
+                'default'  => '',
+            ),
+
+           array(
+                'id'       => 'icp',
+                'type'     => 'text',
+                'title'    => pll__( 'icp备案号' ),
+                'default'  => '',
+            ),
+
+
+
+            array(
+                'id'       => 'footer_logo',
+                'type'     => 'media',
+                'title'    => pll__( '底部logo' ),
+                'url'      => true,
+                ),
+        
+            array(
+                'id'       => 'footer_logo_desc',
+                'type'     => 'textarea',
+                'title'    => pll__( '底部logo描述' ),
+                'default'  => '',
+            )
+
+        )
+    ) );
+// end of general section
+
+
+
+
+
+
+
 
 // start  social  section
 /*     Redux::setSection( $opt_name, array(

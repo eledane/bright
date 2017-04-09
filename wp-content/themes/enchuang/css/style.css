@@ -534,7 +534,7 @@ License: http://creativecommons.org/licenses/by-sa/3.0/ (Attribution Share Alike
 /*------------------------------------*\
     ABOUT US
 \*------------------------------------*/
-.page-hero { background-image: url(../img/page-hero.jpg) !important; background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 300px 0 150px; }
+.page-hero { background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 300px 0 150px; }
 .about-us { background-image: url(../img/about_us.jpg) !important; background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 420px 0 130px; }
 .hero-title { font-family: 'Raleway'; font-size: 48px; font-weight: 600; color: #fff; letter-spacing: 1.8px; line-height: 40px; text-align: center; text-transform: uppercase; margin: 0 0 25px !important; padding: 0; }
 .page-hero .line { background-color: #fff !important; width: 30px !important; }
@@ -786,7 +786,7 @@ p.desc {
 /*------------------------------------*\
     PORTFOLIO
 \*------------------------------------*/
-.portfolio-hero { background-image: url(../img/portfolio-hero.jpg) !important; background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 300px 0 150px; }
+.portfolio-hero { background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 300px 0 150px; }
 .portfolio-hero .line { background-color: #fff !important; width: 30px !important; }
 
 .portfolio-items,
@@ -957,7 +957,7 @@ p.desc {
 /*------------------------------------*\
     BLOG
 \*------------------------------------*/
-.blog-hero { background-image: url(../img/blog-hero.jpg) !important; background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 300px 0 150px; }
+.blog-hero { background-repeat: no-repeat; background-size: cover; background-position: center; width: 100%; padding: 300px 0 150px; }
 .blog-hero .line { background-color: #fff !important; width: 30px !important; }
 
 .post {

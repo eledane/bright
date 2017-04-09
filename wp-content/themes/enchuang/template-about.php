@@ -15,45 +15,39 @@
 */
 
 get_header(); ?>
-	
+
+	  <?php 
+   while(have_posts()): the_post();
+   $header_bg = get_field('about_us_bg');
+   ?> 
+  
 	  <!-- start content -->	
 	  <div class="content">	  
 	    <!-- start hero -->		  
-	    <div class="page-hero">
+	    <div class="page-hero" style="background-image: url(<?php echo $header_bg['sizes']['product_header_background']; ?>)">
 	      <div class="container text-center">
 		    <h1 class="hero-title">
-		      about us
+		     <?php the_title(); ?> 
 		    </h1>
 			<div class="line center"></div>	
 		  </div>
 		</div>
 	    <!-- end hero -->
-
+     <?php $detail = get_field('about_us_desc'); if( $detail ):?>
         <div class="block">
 		  <div class="container">
 		    <div class="row">
+		  <?php foreach( $detail as $item ):?>	  
 			  <div class="col-lg-4 col-md-4 col-sm-4">
-			    <h2>Why choose us?</h2>
-				<div class="line"></div>
-				<ul style="margin-bottom: 10px;">
-                  <li><i class="fa fa-check" style="color: #2ecc71; margin-right: 8px;"></i>Sed quis lobortis risus.</li>
-                  <li><i class="fa fa-check" style="color: #2ecc71; margin-right: 8px;"></i>Donec malesuada augue lib.</li>
-                  <li><i class="fa fa-check" style="color: #2ecc71; margin-right: 8px;"></i>Class aptent taciti sociosqu.</li>
-                  <li><i class="fa fa-check" style="color: #2ecc71; margin-right: 8px;"></i>Duis autem vel eum iriure dolor.</li>
-                </ul>
+			    <h3><?php echo $item['about_us_desc_title']; ?></h3>
+          <?php echo $item['about_us_desc_content']; ?>
 			  </div>
-			  <div class="col-lg-4 col-md-4 col-sm-4">
-			    <h3>Our Mission</h3>
-				<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>
-			  </div>
-			  <div class="col-lg-4 col-md-4 col-sm-4">
-			    <h3>Our Vision</h3>
-				<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>
-			  </div>			  
+			  <?php endforeach; ?>
 			</div>
 		  </div>
 		</div><!-- /.block -->
-		
+	  <?php endif; ?>	
+
 		<div class="container-fluid">
 		  <div class="row">
 		    <div class="col-lg-6 col-md-6 col-sm-6" style="padding: 0;">
@@ -88,23 +82,27 @@ get_header(); ?>
 		      </div>			  
 		  </div>
 		</div><!-- /.container-fluid -->	
+
+    <?php
+    global $enchuang_options;
+     if( !empty($enchuang_options['partners'] )):
+    ?>
 		<!-- /.block -->	
 		<div class="block" style="padding-top: 0;">
           <div class="container">
-		    <h2 class="text-center">Our Great Clients</h2>
+		    <h2 class="text-center"><?php the_field('about_us_agent_title'); ?></h2>
 			<div class="line center"></div>
-			<p class="subtitle text-center">Duis autem vel eum iriure.</p>
-		    <ul class="clients">
-			  <li><img src="<?php bloginfo('template_url');?>/img/clients/logo1.png" alt="" /></li>
-			  <li><img src="<?php bloginfo('template_url');?>/img/clients/logo2.png" alt="" /></li>
-			  <li><img src="<?php bloginfo('template_url');?>/img/clients/logo3.png" alt="" /></li>
-			  <li><img src="<?php bloginfo('template_url');?>/img/clients/logo4.png" alt="" /></li>
-			  <li><img src="<?php bloginfo('template_url');?>/img/clients/logo5.png" alt="" /></li>
-			  <li><img src="<?php bloginfo('template_url');?>/img/clients/logo6.png" alt="" /></li>
+			<p class="subtitle text-center"><?php the_field('about_us_agent_desc'); ?></p>
+        <ul class="clients">
+         <?php foreach( $enchuang_options['partners'] as $p ):?>
+			  <li> <a href="<?php echo $p['url'];?>" target="_blank" title="<?php echo $p['title'];?>"><img src="<?php echo $p['image']; ?>" alt="" /></a></li>
+       <?php endforeach;?>
 			</ul>
+		    
 		  </div>
 		</div><!-- /.block -->		
+  <?php endif; ?>
 	  </div>
 	  <!-- end content -->		  
-
+    <?php endwhile; ?>
 <?php get_footer(); ?>

@@ -11,7 +11,7 @@
  * @since 1.0
  * @version 1.0
  */
-
+global $enchuang_options;
 ?>
 	  <!-- start footer -->	  
 	  <footer class="footer">	  
@@ -19,41 +19,34 @@
 	      <div class="container">		  
 	        <div class="row">			
 	          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-	            <a class="logo" href="index.html"><img src="<?php bloginfo('template_url'); ?>/img/logo_light.png" alt="" /></a>
-				<p class="text-widget">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non magna. Mattis purus sit amet fermentum.</p>
-				<p class="text-widget">Maecenas sed diam eget risus varius blandit sit amet non magna.</p>				
+	            <a class="logo" href="<?php echo get_home_url(); ?>"><img src="<?php echo $enchuang_options['footer_logo']['url']; ?>" alt="" /></a>
+				<p class="text-widget"><?php echo $enchuang_options['footer_logo_desc']; ?></p>				
 		      </div>			  
+
 	          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-	            <h5 class="widget-title">Latest From Our Blog</h5>	
+	            <h5 class="widget-title">友情链接</h5>	
 				<ul class="post-list">
-				  <li><a href="#">Ibiza amazing 5 star hotel</a><p class="date">June 7, 2015</p></li>
-				  <li><a href="#">It's time to get discounts</a><p class="date">June 7, 2015</p></li>
-				  <li><a href="#">It's a good hotel for you</a><p class="date">June 7, 2015</p></li>				  
+				  <li><a href="#">Ibiza amazing 5 star hotel</a></li>
+				  <li><a href="#">It's time to get discounts</a></li>
+				  <li><a href="#">It's a good hotel for you</a></li>				  
 				</ul>					
 		      </div>			  
+
+	        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+	            <h5 class="widget-title">友情链接</h5>	
+				<ul class="post-list">
+				  <li><a href="#">Ibiza amazing 5 star hotel</a></li>
+				  <li><a href="#">It's a good hotel for you</a></li>				  
+				  <li><a href="#">It's a good hotel for you</a></li>				  
+				</ul>					
+		      </div>  
+
 	          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-	            <h5 class="widget-title">tag cloud</h5>		
-				<div class="tags">
-			      <div class="tag"><a href="">awesome</a></div>
-			      <div class="tag"><a href="">flat</a></div>
-			      <div class="tag"><a href="">creative</a></div>
-			      <div class="tag"><a href="">theme</a></div>
-			      <div class="tag"><a href="">css</a></div>
-			      <div class="tag"><a href="">multipurpose</a></div>
-			      <div class="tag"><a href="">ipad</a></div>
-			      <div class="tag"><a href="">business</a></div>
-			      <div class="tag"><a href="">portfolio</a></div>
-			      <div class="tag"><a href="">corporate</a></div>
-			      <div class="tag"><a href="">html</a></div>
-			      <div class="tag"><a href="">website</a></div>
-			    </div>					
-		      </div>			  
-	          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-	            <h5 class="widget-title">Keep in Touch</h5>
+	            <h5 class="widget-title"><?php pll_e('联系我们');?></h5>
 			  <ul class="footer-contact">
-			    <li><i class="fa fa-map-marker"></i><span>Adress: 1234 The Street Name, <br> The City Name, The Location</span></li>
-			    <li><i class="fa fa-phone"></i><span>Phone: +1 (234) 567-89-10</span></li>	
-			    <li><i class="fa fa-envelope"></i><span>Email: <a href="mailto:#">office@yourdomain.com</a></span></li>				
+			    <li><i class="fa fa-map-marker"></i><span><?php pll_e('Address'); ?>: <?php echo $enchuang_options['address']; ?> </span></li>
+			    <li><i class="fa fa-phone"></i><span><?php pll_e('Phone');?>: <?php echo $enchuang_options['cellphone']; ?></span></li>	
+			    <li><i class="fa fa-envelope"></i><span>Email: <a href="mailto:<?php echo $enchuang_options['email']; ?>"><?php echo $enchuang_options['email']; ?></a></span></li>				
 			  </ul>	
 								  
 		      </div>			  
@@ -65,10 +58,10 @@
 	    <div class="footer-bottom">		
 	      <div class="container">		  
 	        <div class="row">			
-	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"><p>Copyright &copy; 2015 <a href="#">alphawd</a>. All Rights Reserved.</p></div>
+	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"><p><?php echo $enchuang_options['copyright']; ?></p></div>
 	          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 			      <ul class="footer-menu">
-			      <li>icp 111111</li>
+			      <li><?php echo $enchuang_options['icp']; ?></li>
 			    </ul>		
 		      </div>		  
 		    </div>			
